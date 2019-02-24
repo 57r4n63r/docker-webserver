@@ -1,0 +1,26 @@
+version: '2'
+
+services:
+   php:
+      build: php
+      ports:
+         - "80:80"
+         - "443:443"
+      volumes:
+         - ./www:/var/www/html
+         - ./config/php/custom.php.ini:/usr/local/etc/php/conf.d/custom.php.ini
+         - ./config/apache/sites-available/default.conf:/etc/apache2/sites-enabled/default.conf
+
+   mariadb:
+       image: 'bitnami/mariadb:latest'
+       labels:
+         kompose.service.type: nodeport
+       ports:
+         - '3306:3306'
+       volumes:
+         - 'mariadb_data:/bitnami'
+       environment:
+         - ALLOW_EMPTY_PASSWORD=yes
+volumes:
+  mariadb_data:
+    driver: local
